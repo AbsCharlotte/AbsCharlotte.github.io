@@ -1,14 +1,15 @@
 function TuneGenerator() {
     let notes = document.getElementsByName("notes")[0].value.split(";");
+    let tempo = document.getElementsByName("tempo")[0].value;
 
     if(!notes)
       return alert("Aucune note entrée.")
 
-    const notesGenerator = new NotesGenerator(notes);
+    const notesGenerator = new NotesGenerator(notes,tempo);
     notesGenerator.start();
 }
 
-function NotesGenerator(notes) {
+function NotesGenerator(notes,tempo) {
 
     const context = new AudioContext();
 
@@ -22,7 +23,7 @@ function NotesGenerator(notes) {
             _this.playNote();
           else
             clearInterval(_this.interval);
-        }, 1000);
+        }, 60000/tempo);
     }
     this.playNote = function() {
         const oscillator = context.createOscillator();
@@ -40,7 +41,7 @@ function NotesGenerator(notes) {
 
         oscillator.start(0);
 
-        const duration = 1;
+        const duration = 60/tempo;
 
         gainNode.gain.linearRampToValueAtTime(0.0001, context.currentTime + duration);
         oscillator.stop(context.currentTime + duration);
